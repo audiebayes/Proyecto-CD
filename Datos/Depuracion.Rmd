@@ -1,0 +1,20 @@
+
+
+
+
+
+
+```{r}
+#Cargo la base de datos:
+datos<- read.csv("DatosR2.csv", header=TRUE, sep=",")
+head(datos)
+```
+```{r}
+#Selecciono las variables que me interesan para mi análisis y hago un subset
+
+datosselect <- datos[c("netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp")]
+
+head(datosselect)
+
+```
+
