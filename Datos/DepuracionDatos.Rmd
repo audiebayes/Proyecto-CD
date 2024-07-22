@@ -124,3 +124,8 @@ head(datosr2)
 
 ```
 
+```{r}
+#Exporto la base de datos depurada
+write.csv(datosr2, "datosr2_depurado.csv", row.names = TRUE)
+```
+
