@@ -1,0 +1,24 @@
+---
+title: "Depuración de datos"
+author: "Clàudia Hernández Bayés"
+date: "'r Sys.Date()'"
+output: html_document
+---
+
+```{r}
+
+knitr::opts_chunk$set(echo=TRUE)
+
+#Cargo la base de datos:
+R2<- read.csv("DATOSR2NUEVO.csv", header=TRUE, sep=",")
+
+#Selecciono las variables de acuerdo con mi objetivo
+datosr2 <- R2[c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "regiones", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")]
+
+#visualizo el dataframe
+head(datosr2)
+
+
+```
+
+
