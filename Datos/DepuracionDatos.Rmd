@@ -20,5 +20,83 @@ head(datosr2)
 
 
 ```
+```{r}
+#recodifico la variable essround y cambio los valores del 1-11 por los años correspondientes. 
 
+datosr2 <- datosr2 %>%
+  mutate(essround = recode(essround,
+                           `1` = 2002,
+                           `2` = 2004,
+                           `3` = 2006,
+                           `4` = 2008,
+                           `5` = 2010,
+                           `6` = 2012,
+                           `7` = 2014,
+                           `8` = 2016,
+                           `9` = 2018,
+                           `10` = 2020,
+                           `11` = 2023))
+
+
+```
+
+```{r}
+
+#Cuento los valores NA porque he visto que hay bastantes, y descarto variables con las que no podré operar
+variables <- c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "regiones", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")
+
+na_counts <- sapply(datosr2[variables], function(x) sum(is.na(x)))
+
+# Mostrar los resultados
+print(na_counts)
+```
+```{r}
+## netuse
+media_netuse <- mean(datosr2$netuse[!datosr2$netuse %in% c(77, 88, 99)], na.rm = TRUE)
+datosr2$netuse[datosr2$netuse %in% c(77, 88, 99)] <- media_netuse
+
+## ppltrst
+media_ppltrst <- mean(datosr2$ppltrst[!datosr2$ppltrst %in% c(77, 88, 99)], na.rm = TRUE)
+datosr2$ppltrst[datosr2$ppltrst %in% c(77, 88, 99)] <- media_ppltrst
+
+## polintr
+media_polintr <- mean(datosr2$polintr[!datosr2$polintr %in% c(7, 8, 9)], na.rm = TRUE)
+datosr2$polintr[datosr2$polintr %in% c(7, 8, 9)] <- media_polintr
+
+## vote
+media_vote <- mean(datosr2$vote[!datosr2$vote %in% c(7, 8, 9)], na.rm = TRUE)
+datosr2$vote[datosr2$vote %in% c(7, 8, 9)] <- media_vote
+
+## prtvtes
+media_prtvtes <- mean(datosr2$prtvtes[!datosr2$prtvtes %in% c(66, 77, 88, 99)], na.rm = TRUE)
+datosr2$prtvtes[datosr2$prtvtes %in% c(66, 77, 88, 99)] <- media_prtvtes
+
+## gndr
+mode_gndr <- as.numeric(names(which.max(table(datosr2$gndr[!datosr2$gndr %in% c(9)]))))
+datosr2$gndr[datosr2$gndr %in% c(9)] <- mode_gndr
+
+## lawobey
+media_lawobey <- mean(datosr2$lawobey[!datosr2$lawobey %in% c(7, 8, 9)], na.rm = TRUE)
+datosr2$lawobey[datosr2$lawobey %in% c(7, 8, 9)] <- media_lawobey
+
+## agea
+media_agea <- mean(datosr2$agea[!datosr2$agea %in% c(999)], na.rm = TRUE)
+datosr2$agea[datosr2$agea %in% c(999)] <- media_agea
+
+## edlves
+media_edlves <- mean(datosr2$edlves[!datosr2$edlves %in% c(77, 88, 99)], na.rm = TRUE)
+datosr2$edlves[datosr2$edlves %in% c(77, 88, 99)] <- media_edlves
+
+# pdjobev
+media_pdjobev <- mean(datosr2$pdjobev[!datosr2$pdjobev %in% c(6, 7, 8, 9)], na.rm = TRUE)
+datosr2$pdjobev[datosr2$pdjobev %in% c(6, 7, 8, 9)] <- media_pdjobev
+
+# dscrgrp
+media_dscrgrp <- mean(datosr2$dscrgrp[!datosr2$dscrgrp %in% c(7, 8, 9)], na.rm = TRUE)
+datosr2$dscrgrp[datosr2$dscrgrp %in% c(7, 8, 9)] <- media_dscrgrp
+
+# Resumen de datos modificados
+summary(datosr2)
+
+```
 
