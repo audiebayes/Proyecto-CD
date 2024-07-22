@@ -1,6 +1,6 @@
 # Proyecto-CD
 
-Versión de R
+VERSION DE R
 '' R 
 
 version 
@@ -19,6 +19,13 @@ svn rev        85441
 language       R                           
 version.string R version 4.3.2 (2023-10-31)
 nickname       Eye Holes   '' 
+
+
+DESCRIPTION 
+Proyecto, objetivos e importancia
+
+
+TABLA DE CONTENIDOS
 
 
 DOCUMENTATION
@@ -168,4 +175,12 @@ Value	Category
 8	Don't know*
 9	No answer*
 
-AIMS:
+
+METHOD:
+
+
+RESULTS:
+
+
+CONTACT:
+
