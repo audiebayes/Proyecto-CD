@@ -1,8 +1,9 @@
-
-
-
-
-
+---
+title: "Depuración de datos"
+author: "Clàudia Hernández Bayés"
+date: "'r Sys.Date()'"
+output: html_document
+---
 
 ```{r}
 #Cargo la base de datos:
