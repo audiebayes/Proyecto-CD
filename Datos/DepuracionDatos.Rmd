@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo=TRUE)
 R2<- read.csv("DATOSR2NUEVO.csv", header=TRUE, sep=",")
 
 #Selecciono las variables de acuerdo con mi objetivo
-datosr2 <- R2[c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "regiones", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")]
+datosr2 <- R2[c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "region", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")]
 
 #visualizo el dataframe
 head(datosr2)
@@ -43,7 +43,7 @@ datosr2 <- datosr2 %>%
 ```{r}
 
 #Cuento los valores NA porque he visto que hay bastantes, y descarto variables con las que no podré operar
-variables <- c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "regiones", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")
+variables <- c("essround", "netuse", "ppltrst", "polintr", "vote", "prtvtes", "lawobey", "gndr", "agea", "edlves", "pdjobev", "dscrgrp", "region", "dscrage", "dscrdk", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", "dscrna", "dscrnap", "dscrntn", "dscroth", "dscrrce", "dscrref", "dscrsex")
 
 na_counts <- sapply(datosr2[variables], function(x) sum(is.na(x)))
 
@@ -127,5 +127,8 @@ head(datosr2)
 ```{r}
 #Exporto la base de datos depurada
 write.csv(datosr2, "datosr2_depurado.csv", row.names = TRUE)
+
+```
+
 ```
 
