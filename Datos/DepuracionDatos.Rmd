@@ -100,3 +100,25 @@ summary(datosr2)
 
 ```
 
+```{r}
+#Revierto el onehot encoding de las variables de discriminación
+discrim_vars <- c("dscrage", "dscrdsb", "dscretn", "dscrgnd", "dscrlng", 
+                  "dscrntn", "dscrrce", "dscrsex")
+
+# Crear un mapeo de las variables a las categorías
+discrim_map <- c("dscrage" = "Edad", "dscrdsb" = "Discapacidad", "dscretn" = "Etnia", 
+                 "dscrgnd" = "Género", "dscrlng" = "Lengua", "dscrntn" = "Nacionalidad", 
+                 "dscrrce" = "Raza", "dscrsex" = "Sexualidad")
+
+# Crear una nueva columna para revertir el one hot encoding
+datosr2$discrimination <- NA
+
+# Revertir el one hot encoding
+for (var in discrim_vars) {
+  datosr2$discrimination[datosr2[[var]] == 1] <- discrim_map[var]
+}
+
+head(datosr2)
+
+```
+
