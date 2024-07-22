@@ -118,6 +118,8 @@ for (var in discrim_vars) {
   datosr2$discrimination[datosr2[[var]] == 1] <- discrim_map[var]
 }
 
+datosr2$discrimination[rowSums(datosr2[discrim_vars]) == 0] <- "No discriminado"
+
 head(datosr2)
 
 ```
