@@ -22,7 +22,7 @@ nickname       Eye Holes   ''
 
 
 DESCRIPTION 
-The main objective of this project is to analyze and understand the trends, prevalence, and associated factors of discrimination in different contexts and demographic gropus, in order to inform the formulation of policies and strategies that promote equality and social inclusion. 
+The main objective of this project is to analyze and understand the trends, prevalence, and associated factors of discrimination in different contexts and demographic groups, in order to inform the formulation of policies and strategies that promote equality and social inclusion. 
 -Trend Analysis: Identify discrimination trends over recent years and establish a baseline to determine the impact of future interventions. Detect and respond to emerging discrimination trends to prevent social exclusion.
 -Demographic Analysis: Identify and understand the areas and demographic groups where discrimination is most prevalent.
 -Political and Social Engagement: Analyze the relationship between political and social engagement and the perception of discrimination.

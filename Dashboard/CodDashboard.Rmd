@@ -21,12 +21,13 @@ library(lorem)
 library(ggplot2)
 library(dplyr)
 library(plotly)
+library(mapdata)
+library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
-library(devtools)
 library(viridis)
-library(mapSpain)
-
+library(rmapshaper)
+library(geojsonio)
 ```
 
 ```{r}
@@ -83,47 +84,11 @@ Column {data-width=550}
 
 ### Discriminación por región
 
-```{r}
-
-
-```
-
-### Discriminación vs. Historia laboral
-
 ```{r fig.width=16, fig.height=10}
-datos_filtrados2 <- datos%>%
-  filter(pdjobev %in% c(1, 2))
 
-discriminaciones_relevantes <- c("Edad", "Discapacidad", "Etnia", "Género", "Lengua", "Nacionalidad", "Raza", "Sexualidad")
-datos_filtrados2 <- datos_filtrados2 %>%
-  mutate(discriminacion_total = ifelse(discrimination %in% discriminaciones_relevantes, "Sí", "No"))
 
-# Agrupar por pdjobev y discriminacion_total y contar los casos
-datos_agg2 <- datos_filtrados2 %>%
-  group_by(pdjobev, discriminacion_total) %>%
-  summarise(count = n()) %>%
-  ungroup()
 
-# Calcular los porcentajes
-datos_agg2 <- datos_agg2 %>%
-  group_by(pdjobev) %>%
-  mutate(percentage = count / sum(count) * 100)
 
-# Crear el gráfico
-p2 <- ggplot(datos_agg2, aes(
-    y = factor(pdjobev, levels = c(1, 2), labels = c("Sí", "No")), 
-    x = percentage, 
-    fill = discriminacion_total, 
-    text = paste("Porcentaje:", round(percentage, 2), "%<br>", "Casos:", count)
-  )) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(y = "Alguna vez tuvo un trabajo remunerado", x = "Porcentaje de casos", fill = "Discriminación") +
-  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
-  scale_fill_manual(values = c("Sí" = "dodgerblue", "No" = "lightsteelblue")) +
-  theme_minimal() 
-
-# Convertir el gráfico de ggplot2 a plotly para interactividad
-ggplotly(p2, tooltip = "text")
 ```
 
 
