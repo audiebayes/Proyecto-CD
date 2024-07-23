@@ -86,8 +86,6 @@ Column {data-width=550}
 ```{r fig.width=16, fig.height=10}
 spain_map <- ne_states(country = "Spain", returnclass = "sf")
 
-unique(spain_map$region)
-
 
 datos_filtrados_con_comunidad <- datos_filtrados %>%
   filter(!is.na(region) & region != "")
@@ -96,7 +94,30 @@ frecuencia_discriminacion <- datos_filtrados_con_comunidad %>%
   group_by(region) %>%
   summarise(casos = n())
 
-frecuencia_discriminacion
+codigos_a_nombres <- c(
+  ES11 = "Galicia", 
+  ES12 = "Principado de Asturias", 
+  ES13 = "Cantabria", 
+  ES21 = "País Vasco", 
+  ES22 = "Comunidad Foral de Navarra", 
+  ES23 = "La Rioja", 
+  ES24 = "Aragón", 
+  ES30 = "Comunidad de Madrid", 
+  ES41 = "Castilla y León", 
+  ES42 = "Castilla-La Mancha", 
+  ES43 = "Extremadura", 
+  ES51 = "Cataluña", 
+  ES52 = "Comunitat Valenciana", 
+  ES53 = "Illes Balears", 
+  ES61 = "Andalucía", 
+  ES62 = "Región de Murcia", 
+  ES63 = "Ciudad de Ceuta", 
+  ES64 = "Ciudad de Melilla", 
+  ES70 = "Canarias"
+)
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>% 
+  mutate(region = codigos_a_nombres[region])
 
 nombres_nuevos <- c(
   "Ciudad de Ceuta" = "Ceuta",
@@ -120,21 +141,45 @@ nombres_nuevos <- c(
   "Comunidad de Madrid" = "Madrid"
 )
 
-frecuencia_discriminacion <- frecuencia_discriminacion %>% 
-  mutate(region = codigos_a_nombres[region])
 
 frecuencia_discriminacion <- frecuencia_discriminacion %>%
   mutate(region = nombres_nuevos[region])
 
+poblacion_comunidades <- tibble::tibble(
+  region = c("Galicia", "Asturias", "Cantabria", "País Vasco", "Foral de Navarra", 
+             "La Rioja", "Aragón", "Madrid", "Castilla y León", "Castilla-La Mancha", 
+             "Extremadura", "Cataluña", "Valenciana", "Islas Baleares", "Andalucía", 
+             "Murcia", "Ceuta", "Melilla", "Canary Is."),
+  poblacion = c(2701743, 1006193, 583904, 2188017, 661203, 319914, 1320586, 6714142, 2394918, 
+                2046107, 1065424, 7739758, 5057353, 1172540, 8472403, 1511251, 84777, 86384, 2252465)
+)
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  left_join(poblacion_comunidades, by = "region")
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  mutate(tasa_discriminacion = (casos / poblacion) * 100000)
+
 map_data <- spain_map %>%
   left_join(frecuencia_discriminacion, by = c("region" = "region"))
 
-ggplot(data = map_data) +
-  geom_sf(aes(fill = casos), color = "white") +
+map_data <- map_data %>%
+  mutate(label = paste(name, "<br>Tasa de discriminación:", round(tasa_discriminacion, 2), "casos por 100,000 habitantes"))
+
+
+p3 <- ggplot(data = map_data) +
+  geom_sf(aes(fill = tasa_discriminacion, text=label), color = "white") +
   scale_fill_gradient(low = "yellow", high = "red", na.value = "grey50") +
   labs(fill = "Nivel de discriminación") +
-  ggtitle("Mapa de Calor de Discriminación por Comunidad Autónoma en España") +
   theme_void()
+
+p3_interactive<-ggplotly(p3, tooltip = "text")
+p3_interactive <- p3_interactive %>% layout(
+  autosize=TRUE
+)
+
+p3_interactive
+
 ```
 
 
