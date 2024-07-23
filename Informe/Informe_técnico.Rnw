@@ -23,14 +23,46 @@
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \maketitle
+\section{Objetivo 1}
 
 \bf{Tabla resumen}
+<<>>=
+datosweave<- read.csv(datosr2_depurado.csv, header=TRUE, sep=",")
+datosweave_filtrados <- datosweave %>% filter(discrimination != "No discriminado")
+datosweave_agg <- datosweave_filtrados %>%
+  group_by(essround, discrimination) %>%
+  summarise(count = n())
+
+print(datosweave_agg)
+
+@
+
 
 \bf{Gráfico con los principales resultados}
 
 \bf{Explicaciones}
 
 Explicaciones que combinen resultados de R insertados mediante código con texto con formato.
+
+\section{Objetivo 2}
+\bf{Tabla resumen}
+
+<<>>=
+
+
+@
+
+
+\bf{Gráfico con los principales resultados}
+
+\bf{Explicaciones}
+
+\section{Objetivo 3}
+\bf{Tabla resumen}
+
+\bf{Gráfico con los principales resultados}
+
+\bf{Explicaciones}
 
 <<>>=
 
