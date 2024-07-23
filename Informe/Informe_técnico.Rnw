@@ -1,5 +1,5 @@
 \documentclass{article}
-\title{Informe técnico Proyecto Ciencia de Datos}
+\title{Informe Técnico Proyecto Ciencia de Datos}
 \author{Clàudia Hernández Bayés}
 \date{July 2024}
 
@@ -21,6 +21,7 @@
 \renewcommand{\tablename}{Bloque}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \maketitle
 
 \bf{Tabla resumen}
