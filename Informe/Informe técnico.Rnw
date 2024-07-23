@@ -1,0 +1,41 @@
+\documentclass{article}
+\title{Informe técnico Proyecto Ciencia de Datos}
+\author{Clàudia Hernández Bayés}
+\date{July 2024}
+
+
+\usepackage[spanish]{babel}
+\usepackage[T1] {fontenc}
+\usepackage[latin1]{imputenc}
+
+\usepackage{geometry}
+  \geometry{
+  a4paper,
+  total={170mm, 257mm},
+  left=20mm,
+  top=20mm,
+    }
+    
+\renewcommand{\refname}{Referencias}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\tablename}{Bloque}
+
+\begin{document}
+\maketitle
+
+\bf{Tabla resumen}
+
+\bf{Gráfico con los principales resultados}
+
+\bf{Explicaciones}
+
+Explicaciones que combinen resultados de R insertados mediante código con texto con formato.
+
+<<>>=
+
+@
+
+
+
+
+\end{document}
