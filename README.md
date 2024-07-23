@@ -22,7 +22,10 @@ nickname       Eye Holes   ''
 
 
 DESCRIPTION 
-Proyecto, objetivos e importancia
+The main objective of this project is to analyze and understand the trends, prevalence, and associated factors of discrimination in different contexts and demographic gropus, in order to inform the formulation of policies and strategies that promote equality and social inclusion. 
+-Trend Analysis: Identify discrimination trends over recent years and establish a baseline to determine the impact of future interventions. Detect and respond to emerging discrimination trends to prevent social exclusion.
+-Demographic Analysis: Identify and understand the areas and demographic groups where discrimination is most prevalent.
+-Political and Social Engagement: Analyze the relationship between political and social engagement and the perception of discrimination.
 
 
 TABLA DE CONTENIDOS
@@ -34,6 +37,11 @@ DOI: 10.21338/ess1e06_7
 Geographical scope: Spain
 
 VARIABLES
+-essround:Year in which the survey was responded to. Continuous variable.
+
+-regiones:
+
+
 - netuse: Personal use of internet
 Value	Category
 0	No access at home or work
@@ -133,17 +141,6 @@ Value	Category
 
 -agea: Age of respondent, calculated
 Continuous variable
-
--marital: legal marital status:
-Value	Category
-1	Married
-2	Separated
-3	Divorced
-4	Widowed
-5	Never married
-7	Refusal*
-8	Don't know*
-9	No answer*
 
 - edlves: Highest level of education, Spain
 Value	Category

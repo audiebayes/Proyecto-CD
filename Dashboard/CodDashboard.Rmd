@@ -1,0 +1,143 @@
+---
+title: "Código Dashboard"
+Author: "Clàudia Hernández"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    social: menu
+    source_code: embed
+  runtime: shiny
+  
+---
+
+```{r setup, include=FALSE}
+
+library(flexdashboard)
+library(tidyverse)
+library(maps)
+library(DT)
+library(lorem)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(devtools)
+library(viridis)
+library(mapSpain)
+
+```
+
+```{r}
+datos <- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
+```
+
+```{r}
+
+```
+
+Gráficos {data-icon=fa-signal}
+=========================================
+Column {data-width=450}
+-----------------------------------------------------------------------
+
+### Casos de discriminación (2002-2023)
+
+```{r}
+#Filtro los datos porque la información sobre las personas no discriminadas no es interesante para el objetivo
+datos$essround <- as.factor(datos$essround)
+datos$discrimination <- as.factor(datos$discrimination)
+
+datos_filtrados <- datos %>% filter(discrimination != "No discriminado")
+
+#Cuento el número de casos por año y tipo de discriminación
+datos_agg <- datos_filtrados %>%
+  group_by(essround, discrimination) %>%
+  summarise(count = n())
+
+#Me aseguro de que ess round sea numérico para el gráfico de serie temporal
+datos_agg$essround <- as.numeric(as.character(datos_agg$essround))
+
+# Crear el gráfico de serie temporal
+p <-ggplot(data = datos_agg, aes(x = essround, y = count, color = discrimination, group = discrimination)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Evolución temporal de los casos de discriminación por tipo",
+       x = "Año",
+       y = "Número de casos",
+       color = "Tipo de discriminación") +
+  theme_minimal()
+
+#Añado la interacción
+p_interactive <- ggplotly(p) %>% 
+  layout(legend = list(title = list(text = 'Tipo de discriminación')))
+
+# Muestro el gráfico
+p_interactive
+
+```
+
+Column {data-width=550}
+-----------------------------------------------------------------------
+
+### Discriminación por región
+
+```{r}
+
+
+```
+
+### Discriminación vs. Historia laboral
+
+```{r fig.width=16, fig.height=10}
+datos_filtrados2 <- datos%>%
+  filter(pdjobev %in% c(1, 2))
+
+discriminaciones_relevantes <- c("Edad", "Discapacidad", "Etnia", "Género", "Lengua", "Nacionalidad", "Raza", "Sexualidad")
+datos_filtrados2 <- datos_filtrados2 %>%
+  mutate(discriminacion_total = ifelse(discrimination %in% discriminaciones_relevantes, "Sí", "No"))
+
+# Agrupar por pdjobev y discriminacion_total y contar los casos
+datos_agg2 <- datos_filtrados2 %>%
+  group_by(pdjobev, discriminacion_total) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Calcular los porcentajes
+datos_agg2 <- datos_agg2 %>%
+  group_by(pdjobev) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+# Crear el gráfico
+p2 <- ggplot(datos_agg2, aes(
+    y = factor(pdjobev, levels = c(1, 2), labels = c("Sí", "No")), 
+    x = percentage, 
+    fill = discriminacion_total, 
+    text = paste("Porcentaje:", round(percentage, 2), "%<br>", "Casos:", count)
+  )) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(y = "Alguna vez tuvo un trabajo remunerado", x = "Porcentaje de casos", fill = "Discriminación") +
+  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(values = c("Sí" = "dodgerblue", "No" = "lightsteelblue")) +
+  theme_minimal() 
+
+# Convertir el gráfico de ggplot2 a plotly para interactividad
+ggplotly(p2, tooltip = "text")
+```
+
+
+Tablas {data-icon=fa-table}
+=========================================
+
+```{r}
+datatable(datos,
+          caption= 'Datos Discriminación 2002-2023',
+          rownames= T,
+          filter= 'top',
+          options= list(pageLength=25))
+```
+
+
+Acerca del estudio {data-icon=fa-globe}
+========================================
