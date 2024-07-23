@@ -12,7 +12,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-
+install.packages("rmapshaper")
+install.packages("geojsonio")
 library(flexdashboard)
 library(tidyverse)
 library(maps)
@@ -85,10 +86,72 @@ Column {data-width=550}
 ### Discriminación por región
 
 ```{r fig.width=16, fig.height=10}
+codigos_comunidades <- data.frame(
+  comunidad = c("ES11", "ES12", "ES13", "ES21", "ES22", "ES23", 
+                "ES24", "ES30", "ES41", "ES42", "ES43", 
+                "ES51", "ES52", "ES53", "ES61", "ES62", 
+                "ES63", "ES64", "ES70"),
+  iso_3166_2 = c("ES-GA", "ES-AS", "ES-CB", "ES-PV", "ES-NC", "ES-RI", 
+                 "ES-AR", "ES-MD", "ES-CL", "ES-CM", "ES-EX", "ES-CT", 
+                 "ES-VC", "ES-IB", "ES-AN", "ES-MC", "ES-CE", "ES-ML", "ES-CN")
+)
+
+ 
+# Eliminar los casos sin comunidad autónoma asignada
+datos_filtrados_con_comunidad <- datos_filtrados %>%
+  filter(!is.na(region) & region != "")
+
+# Crear una tabla de frecuencias de casos de discriminación por comunidad autónoma
+frecuencia_discriminacion <- datos_filtrados_con_comunidad %>%
+  group_by(region) %>%
+  summarise(casos = n())
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>% left_join(codigos_comunidades, by = c("region"="comunidad"))
+ 
+
+```
 
 
+```{r fig.width=16, fig.height=10}
 
+```
 
+### Discriminación vs. Historia laboral
+
+```{r fig.width=16, fig.height=10}
+datos_filtrados2 <- datos%>%
+  filter(pdjobev %in% c(1, 2))
+
+discriminaciones_relevantes <- c("Edad", "Discapacidad", "Etnia", "Género", "Lengua", "Nacionalidad", "Raza", "Sexualidad")
+datos_filtrados2 <- datos_filtrados2 %>%
+  mutate(discriminacion_total = ifelse(discrimination %in% discriminaciones_relevantes, "Sí", "No"))
+
+# Agrupar por pdjobev y discriminacion_total y contar los casos
+datos_agg2 <- datos_filtrados2 %>%
+  group_by(pdjobev, discriminacion_total) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Calcular los porcentajes
+datos_agg2 <- datos_agg2 %>%
+  group_by(pdjobev) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+# Crear el gráfico
+p2 <- ggplot(datos_agg2, aes(
+    y = factor(pdjobev, levels = c(1, 2), labels = c("Sí", "No")), 
+    x = percentage, 
+    fill = discriminacion_total, 
+    text = paste("Porcentaje:", round(percentage, 2), "%<br>", "Casos:", count)
+  )) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(y = "Alguna vez tuvo un trabajo remunerado", x = "Porcentaje de casos", fill = "Discriminación") +
+  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(values = c("Sí" = "dodgerblue", "No" = "lightsteelblue")) +
+  theme_minimal() 
+
+# Convertir el gráfico de ggplot2 a plotly para interactividad
+ggplotly(p2, tooltip = "text")
 ```
 
 
