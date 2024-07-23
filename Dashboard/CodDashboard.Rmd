@@ -12,8 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-install.packages("rmapshaper")
-install.packages("geojsonio")
+
 library(flexdashboard)
 library(tidyverse)
 library(maps)
@@ -27,8 +26,7 @@ library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(viridis)
-library(rmapshaper)
-library(geojsonio)
+
 ```
 
 ```{r}
@@ -86,35 +84,61 @@ Column {data-width=550}
 ### Discriminación por región
 
 ```{r fig.width=16, fig.height=10}
-codigos_comunidades <- data.frame(
-  comunidad = c("ES11", "ES12", "ES13", "ES21", "ES22", "ES23", 
-                "ES24", "ES30", "ES41", "ES42", "ES43", 
-                "ES51", "ES52", "ES53", "ES61", "ES62", 
-                "ES63", "ES64", "ES70"),
-  iso_3166_2 = c("ES-GA", "ES-AS", "ES-CB", "ES-PV", "ES-NC", "ES-RI", 
-                 "ES-AR", "ES-MD", "ES-CL", "ES-CM", "ES-EX", "ES-CT", 
-                 "ES-VC", "ES-IB", "ES-AN", "ES-MC", "ES-CE", "ES-ML", "ES-CN")
-)
+spain_map <- ne_states(country = "Spain", returnclass = "sf")
 
- 
-# Eliminar los casos sin comunidad autónoma asignada
+unique(spain_map$region)
+
+
 datos_filtrados_con_comunidad <- datos_filtrados %>%
   filter(!is.na(region) & region != "")
 
-# Crear una tabla de frecuencias de casos de discriminación por comunidad autónoma
 frecuencia_discriminacion <- datos_filtrados_con_comunidad %>%
   group_by(region) %>%
   summarise(casos = n())
 
-frecuencia_discriminacion <- frecuencia_discriminacion %>% left_join(codigos_comunidades, by = c("region"="comunidad"))
- 
+frecuencia_discriminacion
 
+nombres_nuevos <- c(
+  "Ciudad de Ceuta" = "Ceuta",
+  "Ciudad de Melilla" = "Melilla",
+  "Comunidad Foral de Navarra" = "Foral de Navarra",
+  "País Vasco" = "País Vasco",
+  "Aragón" = "Aragón",
+  "Cataluña" = "Cataluña",
+  "Extremadura" = "Extremadura",
+  "Andalucía" = "Andalucía",
+  "Galicia" = "Galicia",
+  "Castilla y León" = "Castilla y León",
+  "Comunitat Valenciana" = "Valenciana",
+  "Región de Murcia" = "Murcia",
+  "Principado de Asturias" = "Asturias",
+  "Cantabria" = "Cantabria",
+  "Canarias" = "Canary Is.",
+  "Illes Balears" = "Islas Baleares",
+  "La Rioja" = "La Rioja",
+  "Castilla-La Mancha" = "Castilla-La Mancha",
+  "Comunidad de Madrid" = "Madrid"
+)
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>% 
+  mutate(region = codigos_a_nombres[region])
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  mutate(region = nombres_nuevos[region])
+
+map_data <- spain_map %>%
+  left_join(frecuencia_discriminacion, by = c("region" = "region"))
+
+ggplot(data = map_data) +
+  geom_sf(aes(fill = casos), color = "white") +
+  scale_fill_gradient(low = "yellow", high = "red", na.value = "grey50") +
+  labs(fill = "Nivel de discriminación") +
+  ggtitle("Mapa de Calor de Discriminación por Comunidad Autónoma en España") +
+  theme_void()
 ```
 
 
-```{r fig.width=16, fig.height=10}
 
-```
 
 ### Discriminación vs. Historia laboral
 
