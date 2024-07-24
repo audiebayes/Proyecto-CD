@@ -236,11 +236,3 @@ datatable(datos,
 ```
 
 
-
-Acerca del estudio {data-icon=fa-globe}
-========================================
-
-
-Inputs{.sidebar data-height=400}
-----------------
-*'r ipsum(1)'*
