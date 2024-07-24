@@ -1,6 +1,5 @@
 \contentsline {subsection}{\numberline {0.1}Tabla Resumen}{1}{}%
 \contentsline {subsection}{\numberline {0.2}Gráfico}{2}{}%
 \contentsline {subsection}{\numberline {0.3}Tabla Resumen}{2}{}%
-\contentsline {subsection}{\numberline {0.4}Gráfico}{3}{}%
-\contentsline {subsection}{\numberline {0.5}Tabla Resumen}{3}{}%
-\contentsline {subsection}{\numberline {0.6}Gráfico}{3}{}%
+\contentsline {subsection}{\numberline {0.4}Tabla Resumen}{3}{}%
+\contentsline {subsection}{\numberline {0.5}Gráfico}{3}{}%

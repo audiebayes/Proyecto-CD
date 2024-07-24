@@ -39,6 +39,7 @@ print(xtable(datosweave_agg, align= c("l", "r", "r")),
       include.rownames=FALSE, type='latex')
 @
 
+En general, se observa una tendencia fluctuante en el número de casos de discriminación a lo largo de los años. A partir de 2014, hay un incremento significativo que alcanza su punto máximo en 2023 con 161 casos. Esto podría indicar un aumento en la concienciación y la denuncia de casos de discriminación, aunque también podría reflejar un incremento real en los incidentes de discriminación.En la siguiente gráfica podemos desglosar este recuento por tipo de discriminación. 
 
 \subsection{Gráfico}
 <<echo=FALSE, fig=TRUE, results=hide>>=
@@ -116,12 +117,55 @@ print(xtable(frecuenciasweave_discriminacion, align= c("l", "r", "r", "r", "r"))
 @
 
 
-\subsection{Gráfico}
-
-
 \section*{Objetivo 3}
 \subsection{Tabla Resumen}
+<<echo=FALSE, results=tex>>=
+datosweave_filtrados2 <- datosweave%>%
+  filter(pdjobev %in% c(1, 2))
+
+discriminacionesweave_relevantes <- c("Edad", "Discapacidad", "Etnia", "Género", "Lengua", "Nacionalidad", "Raza", "Sexualidad")
+datosweave_filtrados2 <- datosweave_filtrados2 %>%
+  mutate(discriminado = ifelse(discrimination %in% discriminacionesweave_relevantes, "Sí", "No"))
+
+# Agrupar por pdjobev y discriminacion_total y contar los casos
+datosweave_agg2 <- datosweave_filtrados2 %>%
+  group_by(pdjobev, discriminado) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Calcular los porcentajes
+datosweave_agg2 <- datosweave_agg2 %>%
+  group_by(pdjobev) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+datosweave_agg2 <- datosweave_agg2 %>%
+  mutate(pdjobev = recode(pdjobev, `1` = "Sí", `2` = "No"))
+
+print(xtable(datosweave_agg2, align= c("l", "c", "c", "r", "r")),
+      include.rownames=FALSE, type='latex')
+
+@
+
 \subsection{Gráfico}
+<<echo=FALSE, fig=TRUE, results=hide>>=
+s3 <- ggplot(datosweave_agg2, aes(
+    y = factor(pdjobev, levels = c("Sí", "No"), labels = c("Sí", "No")), 
+    x = percentage, 
+    fill = discriminado, 
+    text = paste("Porcentaje:", round(percentage, 2), "%<br>", "Casos:", count)
+  )) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = paste0(round(percentage, 2), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "white", 
+            size = 3.5) +
+  labs(y = "Alguna vez tuvo un trabajo remunerado", x = "Porcentaje de casos", fill = "Discriminación") +
+  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(values = c("Sí" = "dodgerblue", "No" = "lightsteelblue")) +
+  theme_minimal() 
+
+print(s3)
+@
 
 
 \section*{Conclusiones}
