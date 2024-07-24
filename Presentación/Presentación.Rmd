@@ -1,0 +1,70 @@
+---
+title: "Presentacion Proyecto Ciencia de datos"
+author: "Clàudia Hernández"
+date: "July 2024"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+## Contenido
+
+1. Introducción
+2. Objetivo 1
+3. Objetivo 2
+4. Objetivo 3
+5. Conclusiones
+
+## Introducción
+- Objetivo general: analizar y comprender tendencias, la prevalencia y los factores asociados con la discriminación en diversos contextos y grupos demográficos. 
+  
+
+##Objetivo 1
+Identificar tendencias de discriminación utilizando gráficos de series temporales
+
+```{r cars, echo = TRUE}
+datos <- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
+#Filtro los datos porque la información sobre las personas no discriminadas no es interesante para el objetivo
+datos$essround <- as.factor(datos$essround)
+datos$discrimination <- as.factor(datos$discrimination)
+
+datos_filtrados <- datos %>% filter(discrimination != "No discriminado")
+
+#Cuento el número de casos por año y tipo de discriminación
+datos_agg <- datos_filtrados %>%
+  group_by(essround, discrimination) %>%
+  summarise(count = n())
+
+#Me aseguro de que ess round sea numérico para el gráfico de serie temporal
+datos_agg$essround <- as.numeric(as.character(datos_agg$essround))
+
+# Crear el gráfico de serie temporal
+p <-ggplot(data = datos_agg, aes(x = essround, y = count, color = discrimination, group = discrimination)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Evolución temporal de los casos de discriminación por tipo",
+       x = "Año",
+       y = "Número de casos",
+       color = "Tipo de discriminación") +
+  theme_minimal()
+```
+
+##Objetivo 2
+Identificar regiones de España donde la discriminación es más prevalente, medido como el número de casos de discriminación por cada 100.000 habitantes. 
+```{r pressure}
+
+```
+
+##Objetivo 3
+Explorar la relación entre haber tenido un trabajo pagado y sentirse discriminado. 
+
+
+##Conclusiones
+1. Entre 2002 y 2023 se observa un aumento general en todos los tipos de discriminación, excepto por etnia. la disriminación por sexualidad, nacionalidad y género ha crecido exponencialmente, superando los 60 casos en 2023. 
+2. La discriminación varía significativamente entre regiones, con Cantabria, La Rioja, Aragón presentando las tasas más altas. Cataluña y Madrid tienen los números absolutos más altos.
+3. La mayoría de las personas con trabajo pagado no ha enfrentado discriminación, mientras que aquellas sin experiencia laboral tienen una ligera mayor incidencia. 
+
