@@ -1,0 +1,130 @@
+\documentclass{article}
+\title{Informe Técnico Proyecto Ciencia de Datos}
+\author{Clàudia Hernández Bayés}
+\date{July 2024}
+
+\usepackage{geometry}
+  \geometry{
+  a4paper,
+  total={170mm, 257mm},
+  left=20mm,
+  top=20mm,
+    }
+    
+\usepackage{booktabs}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+
+\section*{Introducción}
+
+
+\section*{Objetivo 1}
+\subsection{Tabla Resumen}
+
+<<echo=FALSE, results=tex>>=
+library(dplyr)
+library(xtable)
+datosweave <- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
+datosweave_filtrados <- datosweave %>% filter(discrimination != "No discriminado")
+datosweave_agg <- datosweave_filtrados %>%
+  group_by(essround) %>%
+  summarise(count = n())
+
+print(xtable(datosweave_agg, align= c("l", "r", "r")),
+      include.rownames=FALSE, type='latex')
+@
+
+
+\subsection{Gráfico}
+<<echo=FALSE, fig=TRUE, results=hide>>=
+library(ggplot2)
+#Cuento el número de casos por año y tipo de discriminación
+datosweave_agg1 <- datosweave_filtrados %>%
+  group_by(essround, discrimination) %>%
+  summarise(count = n())
+
+#Me aseguro de que ess round sea numérico para el gráfico de serie temporal
+datosweave_agg1$essround <- as.numeric(as.character(datosweave_agg1$essround))
+
+# Crear el gráfico de serie temporal
+s<-ggplot(data = datosweave_agg1, aes(x = essround, y = count, color = discrimination, group = discrimination)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Evolución temporal de los casos de discriminación por tipo",
+       x = "Año",
+       y = "Número de casos",
+       color = "Tipo de discriminación") +
+  theme_minimal()
+
+print(s)
+@
+
+
+\section*{Objetivo 2}
+\subsection{Tabla Resumen}
+<<echo=FALSE, results=tex>>=
+library(dplyr)
+library(xtable)
+datosweave_filtrados_con_comunidad <- datosweave_filtrados %>%
+  filter(!is.na(region) & region != "")
+
+frecuenciasweave_discriminacion <- datosweave_filtrados_con_comunidad %>%
+  group_by(region) %>%
+  summarise(casos = n())
+
+codigosweave_a_nombres <- c(
+  ES11 = "Galicia", 
+  ES12 = "Principado de Asturias", 
+  ES13 = "Cantabria", 
+  ES21 = "País Vasco", 
+  ES22 = "Comunidad Foral de Navarra", 
+  ES23 = "La Rioja", 
+  ES24 = "Aragón", 
+  ES30 = "Comunidad de Madrid", 
+  ES41 = "Castilla y León", 
+  ES42 = "Castilla-La Mancha", 
+  ES43 = "Extremadura", 
+  ES51 = "Cataluña", 
+  ES52 = "Comunitat Valenciana", 
+  ES53 = "Illes Balears", 
+  ES61 = "Andalucía", 
+  ES62 = "Región de Murcia", 
+  ES63 = "Ciudad de Ceuta", 
+  ES64 = "Ciudad de Melilla", 
+  ES70 = "Canarias"
+)
+
+frecuenciasweave_discriminacion <- frecuenciasweave_discriminacion %>% 
+  mutate(region = codigosweave_a_nombres[region])
+
+poblacion<- c(2701743, 1006193, 583904, 2188017, 661203, 319914, 1320586, 6714142, 2394918, 2046107, 1065424, 7739758, 5057353, 1172540, 8472403, 1511251, 84777, 86384, 2252465)
+
+frecuenciasweave_discriminacion <- frecuenciasweave_discriminacion %>%
+  mutate(poblacion = poblacion)
+
+frecuenciasweave_discriminacion <- frecuenciasweave_discriminacion %>%
+  mutate(tasa_discriminacion = (casos/poblacion)*100000)
+
+
+print(xtable(frecuenciasweave_discriminacion, align= c("l", "r", "r", "r", "r")),
+      include.rownames=FALSE, type='latex')
+@
+
+
+\subsection{Gráfico}
+
+
+\section*{Objetivo 3}
+\subsection{Tabla Resumen}
+\subsection{Gráfico}
+
+
+\section*{Conclusiones}
+
+
+\end{document}

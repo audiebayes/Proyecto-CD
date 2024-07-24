@@ -236,6 +236,7 @@ datatable(datos,
 ```
 
 
+
 Acerca del estudio {data-icon=fa-globe}
 ========================================
 

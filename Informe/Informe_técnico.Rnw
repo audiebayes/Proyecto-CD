@@ -1,12 +1,12 @@
 \documentclass{article}
-\title{Informe Técnico Proyecto Ciencia de Datos}
-\author{Clàudia Hernández Bayés}
+\title{Informe Tecnico Proyecto Ciencia de Datos}
+\author{Claudia Hernandez Bayes}
 \date{July 2024}
 
 
 \usepackage[spanish]{babel}
 \usepackage[T1] {fontenc}
-\usepackage[latin1]{imputenc}
+\usepackage[latin1]{inputenc}
 
 \usepackage{geometry}
   \geometry{
@@ -18,57 +18,44 @@
     
 \renewcommand{\refname}{Referencias}
 \renewcommand{\tablename}{Tabla}
-\renewcommand{\tablename}{Bloque}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \maketitle
 \section{Objetivo 1}
 
-\bf{Tabla resumen}
-<<>>=
-datosweave<- read.csv(datosr2_depurado.csv, header=TRUE, sep=",")
+\textbf{Tabla resumen}
+<<echo=FALSE, results='tex'>>=
+library(dplyr)
+library(xtable)
+library(tinytex)
+datosweave<- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
 datosweave_filtrados <- datosweave %>% filter(discrimination != "No discriminado")
 datosweave_agg <- datosweave_filtrados %>%
   group_by(essround, discrimination) %>%
-  summarise(count = n())
+  summarise(count = n(), .groups = 'drop')
 
-print(datosweave_agg)
-
-@
-
-
-\bf{Gráfico con los principales resultados}
-
-\bf{Explicaciones}
-
-Explicaciones que combinen resultados de R insertados mediante código con texto con formato.
-
-\section{Objetivo 2}
-\bf{Tabla resumen}
-
-<<>>=
-
+print(xtable(datosweave_agg, align= c("l", "c", "c", "r")),
+      include.rownames=FALSE, type='latex')
 
 @
 
 
-\bf{Gráfico con los principales resultados}
+\textbf{Grafico con los principales resultados}
 
-\bf{Explicaciones}
-
-\section{Objetivo 3}
-\bf{Tabla resumen}
-
-\bf{Gráfico con los principales resultados}
-
-\bf{Explicaciones}
-
-<<>>=
-
-@
+\textbf{Explicaciones}
 
 
+\textbf{Tabla resumen}
 
+\textbf{Grafico con los principales resultados}
+
+\textbf{Explicaciones}
+
+\textbf{Tabla resumen}
+
+\textbf{Grafico con los principales resultados}
+
+\textbf{Explicaciones}
 
 \end{document}
