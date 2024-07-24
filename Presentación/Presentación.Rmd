@@ -19,14 +19,19 @@ knitr::opts_chunk$set(echo = FALSE)
 4. Objetivo 3
 5. Conclusiones
 
+
+
 ## Introducción
 - Objetivo general: analizar y comprender tendencias, la prevalencia y los factores asociados con la discriminación en diversos contextos y grupos demográficos. 
   
 
-##Objetivo 1
-Identificar tendencias de discriminación utilizando gráficos de series temporales
 
-```{r cars, echo = TRUE}
+## Objetivo 1
+- Identificar tendencias de discriminación utilizando gráficos de series temporales
+
+```{r cars, figure=TRUE, echo = TRUE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
 datos <- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
 #Filtro los datos porque la información sobre las personas no discriminadas no es interesante para el objetivo
 datos$essround <- as.factor(datos$essround)
@@ -53,17 +58,17 @@ p <-ggplot(data = datos_agg, aes(x = essround, y = count, color = discrimination
   theme_minimal()
 ```
 
-##Objetivo 2
-Identificar regiones de España donde la discriminación es más prevalente, medido como el número de casos de discriminación por cada 100.000 habitantes. 
+## Objetivo 2
+-Identificar regiones de España donde la discriminación es más prevalente, medido como el número de casos de discriminación por cada 100.000 habitantes. 
 ```{r pressure}
 
 ```
 
-##Objetivo 3
-Explorar la relación entre haber tenido un trabajo pagado y sentirse discriminado. 
+## Objetivo 3
+-Explorar la relación entre haber tenido un trabajo pagado y sentirse discriminado. 
 
 
-##Conclusiones
+## Conclusiones
 1. Entre 2002 y 2023 se observa un aumento general en todos los tipos de discriminación, excepto por etnia. la disriminación por sexualidad, nacionalidad y género ha crecido exponencialmente, superando los 60 casos en 2023. 
 2. La discriminación varía significativamente entre regiones, con Cantabria, La Rioja, Aragón presentando las tasas más altas. Cataluña y Madrid tienen los números absolutos más altos.
 3. La mayoría de las personas con trabajo pagado no ha enfrentado discriminación, mientras que aquellas sin experiencia laboral tienen una ligera mayor incidencia. 
