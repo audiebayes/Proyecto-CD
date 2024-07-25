@@ -33,9 +33,9 @@ DOI: 10.21338/ess1e06_7
 Geographical scope: Spain
 
 VARIABLES
--essround:Year in which the survey was responded to. Continuous variable.
+- essround:Year in which the survey was responded to. Continuous variable.
 
--regiones: autonomus community. 
+- regiones: autonomus community. 
 
 
 - netuse: Personal use of internet
@@ -53,7 +53,7 @@ Value	Category
 99	No answer*
 
 
--ppltrst: Most people can be trusted or you can't be too careful
+- ppltrst: Most people can be trusted or you can't be too careful
 Value	Category
 0	You can't be too careful
 1	1
@@ -71,7 +71,7 @@ Value	Category
 99	No answer*
 
 
--polintr: How interested in politics
+- polintr: How interested in politics
 Value	Category
 1	Very interested
 2	Quite interested
@@ -81,7 +81,7 @@ Value	Category
 8	Don't know*
 9	No answer*
 
--vote: Voted last national election
+- vote: Voted last national election
 Value	Category
 1	Yes
 2	No
@@ -90,7 +90,7 @@ Value	Category
 8	Don't know*
 9	No answer*
 
--prtvtes: party voted for in last national election, Spain
+- prtvtes: party voted for in last national election, Spain
 1	Partido Popular (PP)
 2	Partido Socialista Obrero Español (PSOE)
 3	Izquierda Unida (IU)
@@ -109,7 +109,7 @@ Value	Category
 88	Don't know*
 99	No answer*
 
--lawobey: the law should always be obeyed
+- lawobey: the law should always be obeyed
 Value	Category
 1	Agree strongly
 2	Agree
@@ -120,7 +120,7 @@ Value	Category
 8	Don't know*
 9	No answer*
 
--dscrgrp: member of a group discriminated against in this country
+- dscrgrp: member of a group discriminated against in this country
 Value	Category
 1	Yes
 2	No
@@ -129,13 +129,13 @@ Value	Category
 9	No answer*
 
 
--gndr: Gender
+- gndr: Gender
 Value	Category
 1	Male
 2	Female
 9	No answer*
 
--agea: Age of respondent, calculated
+- agea: Age of respondent, calculated
 Continuous variable
 
 - edlves: Highest level of education, Spain
