@@ -2,13 +2,31 @@
 title: "Presentacion Proyecto Ciencia de datos"
 author: "Clàudia Hernández"
 date: "July 2024"
-output: ioslides_presentation
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+  
+  
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width=6, fig.height=4, out.width='50%', out.height='50%')
+
+
 ```
 
+```{css}
+<style>
+  /* Ajusta el tamaño de la fuente y el ancho de la tabla en la diapositiva específica */
+  .table-adjusted {
+    font-size: 10px; /* Ajusta este tamaño según sea necesario */
+    width: 60% !important; /* Ajusta este tamaño según sea necesario */
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+```
 
 
 ## Contenido
@@ -20,16 +38,20 @@ knitr::opts_chunk$set(echo = FALSE)
 5. Conclusiones
 
 
-
 ## Introducción
-- Objetivo general: analizar y comprender tendencias, la prevalencia y los factores asociados con la discriminación en diversos contextos y grupos demográficos. 
-  
+- **Objetivo general**: analizar y comprender tendencias, la prevalencia y los factores asociados con la discriminación en diversos contextos y grupos demográficos. 
+
+  1. Identificar tendencias de discriminación utilizando gráficos de series temporales
+  2. Identificar la tasa de discriminación de las CA de España
+  3. Explorar la relación entre haber tenido un trabajo pagado y sentirse discriminado. 
 
 
-## Objetivo 1
-- Identificar tendencias de discriminación utilizando gráficos de series temporales
+## Objetivo 1: tendencias de discriminación
+- **Tendencias Observadas (2002-2023)**: Todos los tipos de discriminación aumentan, excepto por etnia.Sexualidad, nacionalidad y género muestran un aumento significativo; lengua presenta un crecimiento moderado; edad tiene un incremento bajo.
+- **Casos Reportados en 2023**: las discriminaciones por sexualidad, nacionalidad y género superaron los 60 casos, las discriminaciones por lengua y raza se situaron entre 20 y 40 casos, y las discriminaciones por edad, discapacidad y etnia registraron menos de 20 casos. 
 
-```{r cars, figure=TRUE, echo = TRUE, message=FALSE, warning=FALSE}
+
+```{r cars, fig.width=6, fig.height=4, echo = FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
 datos <- read.csv("datosr2_depurado.csv", header=TRUE, sep=",")
@@ -56,17 +78,180 @@ p <-ggplot(data = datos_agg, aes(x = essround, y = count, color = discrimination
        y = "Número de casos",
        color = "Tipo de discriminación") +
   theme_minimal()
+
+print(p)
 ```
 
-## Objetivo 2
--Identificar regiones de España donde la discriminación es más prevalente, medido como el número de casos de discriminación por cada 100.000 habitantes. 
-```{r pressure}
+## Objetivo 2: Tasa de discriminación
+
+```{r}
+
+library(kableExtra)
+datos_filtrados_con_comunidad <- datos_filtrados %>%
+  filter(!is.na(region) & region != "")
+
+frecuencia_discriminacion <- datos_filtrados_con_comunidad %>%
+  group_by(region) %>%
+  summarise(casos = n())
+
+codigos_a_nombres <- c(
+  ES11 = "Galicia", 
+  ES12 = "Principado de Asturias", 
+  ES13 = "Cantabria", 
+  ES21 = "País Vasco", 
+  ES22 = "Comunidad Foral de Navarra", 
+  ES23 = "La Rioja", 
+  ES24 = "Aragón", 
+  ES30 = "Comunidad de Madrid", 
+  ES41 = "Castilla y León", 
+  ES42 = "Castilla-La Mancha", 
+  ES43 = "Extremadura", 
+  ES51 = "Cataluña", 
+  ES52 = "Comunitat Valenciana", 
+  ES53 = "Illes Balears", 
+  ES61 = "Andalucía", 
+  ES62 = "Región de Murcia", 
+  ES63 = "Ciudad de Ceuta", 
+  ES64 = "Ciudad de Melilla", 
+  ES70 = "Canarias"
+)
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>% 
+  mutate(region = codigos_a_nombres[region])
+
+nombres_nuevos <- c(
+  "Ciudad de Ceuta" = "Ceuta",
+  "Ciudad de Melilla" = "Melilla",
+  "Comunidad Foral de Navarra" = "Foral de Navarra",
+  "País Vasco" = "País Vasco",
+  "Aragón" = "Aragón",
+  "Cataluña" = "Cataluña",
+  "Extremadura" = "Extremadura",
+  "Andalucía" = "Andalucía",
+  "Galicia" = "Galicia",
+  "Castilla y León" = "Castilla y León",
+  "Comunitat Valenciana" = "Valenciana",
+  "Región de Murcia" = "Murcia",
+  "Principado de Asturias" = "Asturias",
+  "Cantabria" = "Cantabria",
+  "Canarias" = "Canary Is.",
+  "Illes Balears" = "Islas Baleares",
+  "La Rioja" = "La Rioja",
+  "Castilla-La Mancha" = "Castilla-La Mancha",
+  "Comunidad de Madrid" = "Madrid"
+)
+
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  mutate(region = nombres_nuevos[region])
+
+poblacion_comunidades <- tibble::tibble(
+  region = c("Galicia", "Asturias", "Cantabria", "País Vasco", "Foral de Navarra", 
+             "La Rioja", "Aragón", "Madrid", "Castilla y León", "Castilla-La Mancha", 
+             "Extremadura", "Cataluña", "Valenciana", "Islas Baleares", "Andalucía", 
+             "Murcia", "Ceuta", "Melilla", "Canary Is."),
+  poblacion = c(2701743, 1006193, 583904, 2188017, 661203, 319914, 1320586, 6714142, 2394918, 
+                2046107, 1065424, 7739758, 5057353, 1172540, 8472403, 1511251, 84777, 86384, 2252465)
+)
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  left_join(poblacion_comunidades, by = "region")
+
+frecuencia_discriminacion <- frecuencia_discriminacion %>%
+  mutate(tasa_discriminacion = (casos / poblacion) * 100000)
+
+frecuencia_discriminacion_part1 <- frecuencia_discriminacion[1:10, ]
+frecuencia_discriminacion_part2 <- frecuencia_discriminacion[11:19, ]
+
+kable(frecuencia_discriminacion_part1, format = "html", table.attr = 'class="table table-striped"') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 8, full_width = TRUE, position = "left")
+
+
+
+```
+## Objetivo 2: Tasa de discriminación II
+```{r}
+kable(frecuencia_discriminacion_part2, format = "html", table.attr = 'class="table table-striped"') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 8, full_width = TRUE, position = "left")
 
 ```
 
-## Objetivo 3
--Explorar la relación entre haber tenido un trabajo pagado y sentirse discriminado. 
 
+## Objetivo 2: Tasa de discriminación III
+1. **Tasas más Altas**
+   - **Cantabria**: 2.57 casos por cada 100,000 habitantes
+   - **La Rioja**: 2.19 casos
+   - **Aragón**: 2.12 casos
+
+2. **Casos Absolutos**
+   - **Cataluña**: 148 casos reportados
+   - **Comunidad de Madrid**: 138 casos
+   - **Andalucía**: 81 casos
+
+3. **Tasas más Bajas**
+   - **Canarias**: 0.67 casos por cada 100,000 habitantes
+   - **Castilla-La Mancha**: 0.83 casos
+   - **Región de Murcia**: 0.79 casos
+
+## Objetivo 3: Discriminación y variables sociográficas
+```{r}
+datos_filtrados2 <- datos%>%
+  filter(pdjobev %in% c(1, 2))
+
+discriminaciones_relevantes <- c("Edad", "Discapacidad", "Etnia", "Género", "Lengua", "Nacionalidad", "Raza", "Sexualidad")
+datos_filtrados2 <- datos_filtrados2 %>%
+  mutate(discriminacion_total = ifelse(discrimination %in% discriminaciones_relevantes, "Sí", "No"))
+
+# Agrupar por pdjobev y discriminacion_total y contar los casos
+datos_agg2 <- datos_filtrados2 %>%
+  group_by(pdjobev, discriminacion_total) %>%
+  summarise(count = n()) %>%
+  ungroup()
+
+# Calcular los porcentajes
+datos_agg2 <- datos_agg2 %>%
+  group_by(pdjobev) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+datos_agg2 <- datos_agg2 %>%
+  mutate(pdjobev = recode(pdjobev, `1` = "Sí", `2` = "No"))
+
+kable(datos_agg2, format = "html", table.attr = 'class="table table-striped"') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), font_size = 8, full_width = TRUE, position = "left")
+
+```
+ 
+```{r}
+p2 <- ggplot(datos_agg2, aes(
+    y = factor(pdjobev, levels = c("Sí", "No"), labels = c("Sí", "No")), 
+    x = percentage, 
+    fill = discriminacion_total, 
+    text = paste("Porcentaje:", round(percentage, 2), "%<br>", "Casos:", count)
+  )) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(y = "Tuvo un trabajo remunerado", x = "Porcentaje de casos", fill = "Discriminación") +
+  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(values = c("Sí" = "dodgerblue", "No" = "lightsteelblue")) +
+  theme_minimal() 
+
+print(p2)
+```
+ 
+## Objetivo 3: Discriminación y Variables Sociográficas II
+
+1. **Participantes con Trabajo Pagado (Sí)**
+   - **No Discriminados**: 95.61% (6050 casos)
+   - **Discriminados**: 4.39% (278 casos)
+   - La mayoría de las personas con experiencia laboral remunerada no ha enfrentado discriminación, aunque hay una minoría significativa que sí la ha sufrido.
+
+2. **Participantes sin Trabajo Pagado (No)**
+   - **No Discriminados**: 94.87% (2738 casos)
+   - **Discriminados**: 5.13% (148 casos)
+   - Aunque la proporción de discriminación es ligeramente mayor en este grupo, la mayoría sigue sin haber enfrentado discriminación.
+
+3. **Conclusión General**
+   - Haber tenido un trabajo pagado no parece estar fuertemente asociado con la experiencia de discriminación.
+   - Hay una ligera variación en las tasas de discriminación entre los dos grupos.
 
 ## Conclusiones
 1. Entre 2002 y 2023 se observa un aumento general en todos los tipos de discriminación, excepto por etnia. la disriminación por sexualidad, nacionalidad y género ha crecido exponencialmente, superando los 60 casos en 2023. 
